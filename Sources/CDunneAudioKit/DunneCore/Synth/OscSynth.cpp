@@ -44,8 +44,8 @@ OscSynth::OscSynth()
 , masterVolume(1.0f)
 , pitchOffset(0.0f)
 , vibratoDepth(0.0f)
-, cutoffMultiple(4.0f)
-, cutoffEnvelopeStrength(20.0f)
+, cutoffMultiple(1024.0f)
+, cutoffEnvelopeStrength(0.0f)
 , linearResonance(1.0f)
 , data(new InternalData)
 {
@@ -341,7 +341,8 @@ float OscSynth::getFilterReleaseDurationSeconds(void)
 {
     return data->filterEGParameters.getReleaseDurationSeconds();
 }
-void  OscSynth::setWaveform(float value)
+
+void OscSynth::setWaveform(float value)
 {
     data->voiceParameters.osc1.waveform = (DunneCore::OscWaveform)value;
 }

@@ -49,9 +49,6 @@ public:
     void  setFilterReleaseDurationSeconds(float value);
     float getFilterReleaseDurationSeconds(void);
 
-    void  setWaveform(float value);
-    float getWaveform(void);
-
     void render(unsigned channelCount, unsigned sampleCount, float *outBuffers[]);
 
 protected:
@@ -80,6 +77,9 @@ protected:
     void stop(unsigned noteNumber, bool immediate);
 
     DunneCore::OscVoice *voicePlayingNote(unsigned noteNumber);
+
+    void  setWaveform(float value);
+    float getWaveform(void);
 };
 
 #endif

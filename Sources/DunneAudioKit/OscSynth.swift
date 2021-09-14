@@ -76,8 +76,8 @@ public class OscSynth: Node {
         identifier: "filterCutoff",
         name: "Filter Cutoff",
         address: akGetParameterAddress("OscSynthParameterFilterCutoff"),
-        defaultValue: 4.0,
-        range: 0 ... 1,
+        defaultValue: 100.0,
+        range: 0 ... 100,
         unit: .generic)
 
     /// Filter cutoff (harmonic ratio)
@@ -88,7 +88,7 @@ public class OscSynth: Node {
         identifier: "filterStrength",
         name: "Filter Strength",
         address: akGetParameterAddress("OscSynthParameterFilterStrength"),
-        defaultValue: 20,
+        defaultValue: 00,
         range: 0 ... 100,
         unit: .generic)
 
