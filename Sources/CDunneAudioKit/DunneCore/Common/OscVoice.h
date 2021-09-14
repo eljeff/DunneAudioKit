@@ -59,6 +59,8 @@ namespace DunneCore
         float newNoteVol;   // holds new note volume while damping note before restarting
         float tempGain;     // product of global volume, note volume, and amp EG
 
+        float phaseOffset = (float)rand() / RAND_MAX;   // generate a random number 0-1 to offset lfo phase per voice
+
         OscVoice(std::mt19937* gen) : noteNumber(-1), osc1(gen) {}
 
         void init(double sampleRate,

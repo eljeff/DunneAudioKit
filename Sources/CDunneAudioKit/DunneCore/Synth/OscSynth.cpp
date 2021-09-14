@@ -249,12 +249,15 @@ void OscSynth::render(unsigned channelCount, unsigned sampleCount, float *outBuf
     float *pOutLeft = outBuffers[0];
     float *pOutRight = outBuffers[1];
     data->vibratoLFO.setFrequency(vibratoFreq);
-    float pitchDev = pitchOffset + vibratoDepth * data->vibratoLFO.getSample();
-    float phaseDeltaMultiplier = pow(2.0f, pitchDev / 12.0);
+    data->vibratoLFO.advanceLFO();
 
     for (int i=0; i < MAX_VOICE_COUNT; i++)
     {
         auto pVoice = data->voice[i].get();
+
+        float pitchDev = pitchOffset + vibratoDepth * data->vibratoLFO.getSample(pVoice->phaseOffset);
+        float phaseDeltaMultiplier = pow(2.0f, pitchDev / 12.0);
+
         int nn = pVoice->noteNumber;
         if (nn >= 0)
         {
