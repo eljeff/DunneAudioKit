@@ -26,7 +26,7 @@ struct OscSynth::InternalData
     /// array of voice resources
     unique_ptr<DunneCore::OscVoice> voice[MAX_VOICE_COUNT];
 
-    DunneCore::WaveStack waveform1, waveform2, waveform3;      // WaveStacks are shared by all voice oscillators
+    DunneCore::WaveStack waveform1;      // WaveStacks are shared by all voice oscillators
     DunneCore::FunctionTableOscillator vibratoLFO;             // one vibrato LFO shared by all voices
     DunneCore::SustainPedalLogic pedalLogic;
 
@@ -66,12 +66,8 @@ int OscSynth::init(double sampleRate)
     DunneCore::FunctionTable waveform;
     int length = 1 << DunneCore::WaveStack::maxBits;
     waveform.init(length);
-    waveform.sawtooth(0.2f);
+    waveform.sinusoid(1.0f);
     data->waveform1.initStack(waveform.waveTable);
-    waveform.square(0.4f, 0.01f);
-    data->waveform2.initStack(waveform.waveTable);
-    waveform.triangle(0.5f);
-    data->waveform3.initStack(waveform.waveTable);
 
     data->ampEGParameters.updateSampleRate((float)(sampleRate/SYNTH_CHUNKSIZE));
     data->filterEGParameters.updateSampleRate((float)(sampleRate/SYNTH_CHUNKSIZE));
@@ -79,11 +75,11 @@ int OscSynth::init(double sampleRate)
     data->vibratoLFO.waveTable.sinusoid();
     data->vibratoLFO.init(sampleRate/SYNTH_CHUNKSIZE, 5.0f);
 
-    data->voiceParameters.osc1.phases = 4;
+    data->voiceParameters.osc1.phases = 1;
     data->voiceParameters.osc1.frequencySpread = 25.0f;
     data->voiceParameters.osc1.panSpread = 0.95f;
     data->voiceParameters.osc1.pitchOffset = 0.0f;
-    data->voiceParameters.osc1.mixLevel = 0.7f;
+    data->voiceParameters.osc1.mixLevel = 1.0f;
 
     data->voiceParameters.filterStages = 2;
 
