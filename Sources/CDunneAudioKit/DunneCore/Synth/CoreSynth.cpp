@@ -348,3 +348,52 @@ float CoreSynth::getFilterReleaseDurationSeconds(void)
 {
     return data->filterEGParameters.getReleaseDurationSeconds();
 }
+
+void  CoreSynth::setOsc1Mix(float value) {
+    data->voiceParameters.osc1.mixLevel = value;
+}
+float CoreSynth::getOsc1Mix(void) {
+    return data->voiceParameters.osc1.mixLevel;
+}
+void  CoreSynth::setOsc1Phases(float value) {
+    data->voiceParameters.osc1.phases = value;
+}
+float CoreSynth::getOsc1Phases(void) {
+    return data->voiceParameters.osc1.phases;
+}
+void  CoreSynth::setOsc1FreqSpread(float value) {
+    data->voiceParameters.osc1.frequencySpread = value;
+}
+float CoreSynth::getOsc1FreqSpread(void) {
+    return data->voiceParameters.osc1.frequencySpread;
+}
+void  CoreSynth::setOsc1PanSpread(float value) {
+    data->voiceParameters.osc1.panSpread = value;
+}
+float CoreSynth::getOsc1PanSpread(void) {
+    return data->voiceParameters.osc1.panSpread;
+}
+void  CoreSynth::setOsc1PitchOffset(float value) {
+    data->voiceParameters.osc1.pitchOffset = value;
+}
+float CoreSynth::getOsc1PitchOffset(void) {
+    return data->voiceParameters.osc1.pitchOffset;
+}
+
+void  CoreSynth::setOsc2Mix(float value)
+{
+    data->voiceParameters.osc2.mixLevel = value;
+}
+float CoreSynth::getOsc2Mix(void)
+{
+    return data->voiceParameters.osc2.mixLevel;
+}
+
+void  CoreSynth::setOsc3Mix(float value)
+{
+    data->voiceParameters.osc3.mixLevel = value;
+}
+float CoreSynth::getOsc3Mix(void)
+{
+    return data->voiceParameters.osc3.mixLevel;
+}

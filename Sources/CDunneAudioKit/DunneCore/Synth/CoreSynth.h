@@ -43,6 +43,23 @@ public:
     float getFilterSustainFraction(void);
     void  setFilterReleaseDurationSeconds(float value);
     float getFilterReleaseDurationSeconds(void);
+
+    void  setOsc1Mix(float value);
+    float getOsc1Mix(void);
+    void  setOsc1Phases(float value);
+    float getOsc1Phases(void);
+    void  setOsc1FreqSpread(float value);
+    float getOsc1FreqSpread(void);
+    void  setOsc1PanSpread(float value);
+    float getOsc1PanSpread(void);
+    void  setOsc1PitchOffset(float value);
+    float getOsc1PitchOffset(void);
+
+    void  setOsc2Mix(float value);
+    float getOsc2Mix(void);
+
+    void  setOsc3Mix(float value);
+    float getOsc3Mix(void);
     
     void render(unsigned channelCount, unsigned sampleCount, float *outBuffers[]);
     

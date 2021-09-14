@@ -141,6 +141,16 @@ namespace DunneCore
 
         return false;
     }
+
+    void SynthVoice::updateOscParameters() {
+        printf("updating oscParameters\n");
+        osc1.setPhases(pParameters->osc1.phases);
+        osc1.setFreqSpread(pParameters->osc1.frequencySpread);
+        osc1.setPanSpread(pParameters->osc1.panSpread);
+        osc2.setPhases(pParameters->osc2.phases);
+        osc2.setFreqSpread(pParameters->osc2.frequencySpread);
+        osc2.setPanSpread(pParameters->osc2.panSpread);
+    }
     
     bool SynthVoice::getSamples(int sampleCount, float *leftOutput, float *rightOutput)
     {
@@ -165,5 +175,4 @@ namespace DunneCore
         }
         return false;
     }
-
 }

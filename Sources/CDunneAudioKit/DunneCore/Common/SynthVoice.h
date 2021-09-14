@@ -66,6 +66,7 @@ namespace DunneCore
         
         void updateAmpAdsrParameters() { ampEG.updateParams(); }
         void updateFilterAdsrParameters() { filterEG.updateParams(); }
+        void updateOscParameters();
         
         void start(unsigned evt, unsigned noteNumber, float frequency, float volume);
         void restart(unsigned evt, float volume);
