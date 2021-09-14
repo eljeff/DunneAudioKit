@@ -16,8 +16,17 @@
 namespace DunneCore
 {
 
+    enum OscWaveform {
+        sin = 0,
+        sqr = 1,
+        tri = 2,
+        saw = 3,
+        hmd = 4
+    };
+
     struct OscParameters
     {
+        OscWaveform waveform;   // 0 = sin, 1 = sqr, 2 = tri, 3 = saw, 4 = hammond
         int phases;             // 1 to 10, or 0 to disable oscillator
         float frequencySpread;  // cents
         float panSpread;        // fraction 0 = no spread, 1 = max spread

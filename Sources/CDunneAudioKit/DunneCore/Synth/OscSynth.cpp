@@ -55,26 +55,8 @@ OscSynth::OscSynth()
         data->voice[i]->ampEG.pParameters = &data->ampEGParameters;
         data->voice[i]->filterEG.pParameters = &data->filterEGParameters;
     }
-}
 
-OscSynth::~OscSynth()
-{
-}
-
-int OscSynth::init(double sampleRate)
-{
-    DunneCore::FunctionTable waveform;
-    int length = 1 << DunneCore::WaveStack::maxBits;
-    waveform.init(length);
-    waveform.sinusoid(1.0f);
-    data->waveform1.initStack(waveform.waveTable);
-
-    data->ampEGParameters.updateSampleRate((float)(sampleRate/SYNTH_CHUNKSIZE));
-    data->filterEGParameters.updateSampleRate((float)(sampleRate/SYNTH_CHUNKSIZE));
-
-    data->vibratoLFO.waveTable.sinusoid();
-    data->vibratoLFO.init(sampleRate/SYNTH_CHUNKSIZE, 5.0f);
-
+    data->voiceParameters.osc1.waveform = DunneCore::sin;
     data->voiceParameters.osc1.phases = 1;
     data->voiceParameters.osc1.frequencySpread = 25.0f;
     data->voiceParameters.osc1.panSpread = 0.95f;
@@ -101,6 +83,41 @@ int OscSynth::init(double sampleRate)
     data->segParameters[5].initialLevel = 0.0f;   // release: from wherever we leave off
     data->segParameters[5].finalLevel = 0.0f;     // down to 0
     data->segParameters[5].seconds = 0.5f;        // in 0.5 sec
+}
+
+OscSynth::~OscSynth()
+{
+}
+
+int OscSynth::init(double sampleRate)
+{
+    DunneCore::FunctionTable waveform;
+    int length = 1 << DunneCore::WaveStack::maxBits;
+    waveform.init(length);
+    switch (data->voiceParameters.osc1.waveform) {
+        case DunneCore::sin:
+            waveform.sinusoid(1.0f);
+            break;
+        case DunneCore::sqr:
+            waveform.square(1.0f);
+            break;
+        case DunneCore::tri:
+            waveform.triangle(1.0f);
+            break;
+        case DunneCore::saw:
+            waveform.sawtooth(1.0f);
+            break;
+        case DunneCore::hmd:
+            waveform.hammond(1.0f);
+            break;
+    }
+    data->waveform1.initStack(waveform.waveTable);
+
+    data->ampEGParameters.updateSampleRate((float)(sampleRate/SYNTH_CHUNKSIZE));
+    data->filterEGParameters.updateSampleRate((float)(sampleRate/SYNTH_CHUNKSIZE));
+
+    data->vibratoLFO.waveTable.sinusoid();
+    data->vibratoLFO.init(sampleRate/SYNTH_CHUNKSIZE, 5.0f);
 
     data->envParameters.init((float)(sampleRate/SYNTH_CHUNKSIZE), 6, data->segParameters, 3, 0, 5);
 
