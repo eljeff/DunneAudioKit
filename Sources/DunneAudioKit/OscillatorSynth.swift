@@ -1,5 +1,5 @@
 //
-//  OscSynth.swift
+//  OscillatorSynth.swift
 //  
 //
 //  Created by Jeff Cooper on 9/14/21.
@@ -25,7 +25,7 @@ public enum OscSynthWaveForm: Int {
 
 /// OscSynth
 ///
-public class OscSynth: Node {
+public class OscillatorSynth: Node {
 
     /// Connected nodes
     public var connections: [Node] { [] }
@@ -70,6 +70,18 @@ public class OscSynth: Node {
 
     /// Vibrato amount (semitones)
     @Parameter(vibratoDepthDef) public var vibratoDepth: AUValue
+
+    /// Specification details for vibratoFreq
+    public static let vibratoFreqDef = NodeParameterDef(
+        identifier: "vibratoFreq",
+        name: "Vibrato Frequency",
+        address: akGetParameterAddress("OscSynthParameterVibratoFreq"),
+        defaultValue: 3.0,
+        range: 0.01 ... 100,
+        unit: .hertz)
+
+    /// Vibrato frequency (hertz)
+    @Parameter(vibratoFreqDef) public var vibratoFreq: AUValue
 
     /// Specification details for filterCutoff
     public static let filterCutoffDef = NodeParameterDef(

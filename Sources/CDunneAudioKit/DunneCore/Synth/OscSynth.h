@@ -60,7 +60,7 @@ protected:
     unsigned eventCounter;
 
     // performance parameters
-    float masterVolume, pitchOffset, vibratoDepth;
+    float masterVolume, pitchOffset, vibratoDepth, vibratoFreq;
 
     // filter parameters
 

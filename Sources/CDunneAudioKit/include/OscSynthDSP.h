@@ -16,6 +16,7 @@ typedef NS_ENUM(AUParameterAddress, OscSynthParameter)
     OscSynthParameterMasterVolume,
     OscSynthParameterPitchBend,
     OscSynthParameterVibratoDepth,
+    OscSynthParameterVibratoFreq,
     OscSynthParameterFilterCutoff,
     OscSynthParameterFilterStrength,
     OscSynthParameterFilterResonance,

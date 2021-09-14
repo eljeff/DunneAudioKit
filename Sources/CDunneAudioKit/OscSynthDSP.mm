@@ -18,6 +18,7 @@ struct OscSynthDSP : DSPBase, OscSynth
     LinearParameterRamp masterVolumeRamp;
     LinearParameterRamp pitchBendRamp;
     LinearParameterRamp vibratoDepthRamp;
+    LinearParameterRamp vibratoFreqRamp;
     LinearParameterRamp filterCutoffRamp;
     LinearParameterRamp filterStrengthRamp;
     LinearParameterRamp filterResonanceRamp;
@@ -42,6 +43,7 @@ OscSynthDSP::OscSynthDSP() : DSPBase(/*inputBusCount*/0), OscSynth()
     masterVolumeRamp.setTarget(1.0, true);
     pitchBendRamp.setTarget(0.0, true);
     vibratoDepthRamp.setTarget(0.0, true);
+    vibratoFreqRamp.setTarget(3.0, true);
     filterCutoffRamp.setTarget(1000.0, true);
     filterResonanceRamp.setTarget(1.0, true);
 }
@@ -65,6 +67,7 @@ void OscSynthDSP::setParameter(uint64_t address, float value, bool immediate)
             masterVolumeRamp.setRampDuration(value, sampleRate);
             pitchBendRamp.setRampDuration(value, sampleRate);
             vibratoDepthRamp.setRampDuration(value, sampleRate);
+            vibratoFreqRamp.setRampDuration(value, sampleRate);
             filterCutoffRamp.setRampDuration(value, sampleRate);
             filterResonanceRamp.setRampDuration(value, sampleRate);
             break;
@@ -77,6 +80,9 @@ void OscSynthDSP::setParameter(uint64_t address, float value, bool immediate)
             break;
         case OscSynthParameterVibratoDepth:
             vibratoDepthRamp.setTarget(value, immediate);
+            break;
+        case OscSynthParameterVibratoFreq:
+            vibratoFreqRamp.setTarget(value, immediate);
             break;
         case OscSynthParameterFilterCutoff:
             filterCutoffRamp.setTarget(value, immediate);
@@ -131,6 +137,8 @@ float OscSynthDSP::getParameter(uint64_t address)
             return pitchBendRamp.getTarget();
         case OscSynthParameterVibratoDepth:
             return vibratoDepthRamp.getTarget();
+        case OscSynthParameterVibratoFreq:
+            return vibratoFreqRamp.getTarget();
         case OscSynthParameterFilterCutoff:
             return filterCutoffRamp.getTarget();
         case OscSynthParameterFilterStrength:
@@ -204,6 +212,8 @@ void OscSynthDSP::process(FrameRange range)
         pitchOffset = (float)pitchBendRamp.getValue();
         vibratoDepthRamp.advanceTo(now + frameOffset);
         vibratoDepth = (float)vibratoDepthRamp.getValue();
+        vibratoFreqRamp.advanceTo(now + frameOffset);
+        vibratoFreq = (float)vibratoFreqRamp.getValue();
         filterCutoffRamp.advanceTo(now + frameOffset);
         cutoffMultiple = (float)filterCutoffRamp.getValue();
         filterStrengthRamp.advanceTo(now + frameOffset);
@@ -224,6 +234,7 @@ AK_REGISTER_DSP(OscSynthDSP, "osyn")
 AK_REGISTER_PARAMETER(OscSynthParameterMasterVolume)
 AK_REGISTER_PARAMETER(OscSynthParameterPitchBend)
 AK_REGISTER_PARAMETER(OscSynthParameterVibratoDepth)
+AK_REGISTER_PARAMETER(OscSynthParameterVibratoFreq)
 AK_REGISTER_PARAMETER(OscSynthParameterFilterCutoff)
 AK_REGISTER_PARAMETER(OscSynthParameterFilterStrength)
 AK_REGISTER_PARAMETER(OscSynthParameterFilterResonance)
