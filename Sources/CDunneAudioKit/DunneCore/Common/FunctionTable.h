@@ -93,13 +93,26 @@ namespace DunneCore
         void deinit();
         
         void setFrequency(float frequency);
-        
+
+        // Advance LFO without getting a sample
+        inline void advanceLFO()
+        {
+            phase += phaseDelta;
+            if (phase >= 1.0f) phase -= 1.0f;
+        }
+
         // For typical LFO applications, we simply get one sample at a time.
         inline float getSample()
         {
             float sample = waveTable.interp_cyclic(phase);
-            phase += phaseDelta;
-            if (phase >= 1.0f) phase -= 1.0f;
+            advanceLFO();
+            return sample;
+        }
+
+        // Get a variation of the LFO using this phase offset, don't update phase
+        inline float getSample(float phaseOffset)
+        {
+            float sample = waveTable.interp_cyclic(phaseOffset + phase);
             return sample;
         }
 
@@ -110,8 +123,7 @@ namespace DunneCore
         {
             *pInPhase = waveTable.interp_cyclic(phase);
             *pQuadrature = waveTable.interp_cyclic(phase + 0.25f);
-            phase += phaseDelta;
-            if (phase >= 1.0f) phase -= 1.0f;
+            advanceLFO();
         }
     };
     
