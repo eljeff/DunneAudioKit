@@ -56,7 +56,7 @@ OscSynth::OscSynth()
         data->voice[i]->filterEG.pParameters = &data->filterEGParameters;
     }
 
-    data->voiceParameters.osc1.waveform = DunneCore::sin;
+    data->voiceParameters.osc1.waveform = DunneCore::sinusoid;
     data->voiceParameters.osc1.phases = 1;
     data->voiceParameters.osc1.frequencySpread = 25.0f;
     data->voiceParameters.osc1.panSpread = 0.95f;
@@ -95,19 +95,19 @@ int OscSynth::init(double sampleRate)
     int length = 1 << DunneCore::WaveStack::maxBits;
     waveform.init(length);
     switch (data->voiceParameters.osc1.waveform) {
-        case DunneCore::sin:
+        case DunneCore::sinusoid:
             waveform.sinusoid(1.0f);
             break;
-        case DunneCore::sqr:
+        case DunneCore::square:
             waveform.square(1.0f);
             break;
-        case DunneCore::tri:
+        case DunneCore::triangle:
             waveform.triangle(1.0f);
             break;
-        case DunneCore::saw:
+        case DunneCore::sawtooth:
             waveform.sawtooth(1.0f);
             break;
-        case DunneCore::hmd:
+        case DunneCore::hammond:
             waveform.hammond(1.0f);
             break;
     }
@@ -340,4 +340,12 @@ void  OscSynth::setFilterReleaseDurationSeconds(float value)
 float OscSynth::getFilterReleaseDurationSeconds(void)
 {
     return data->filterEGParameters.getReleaseDurationSeconds();
+}
+void  OscSynth::setWaveform(float value)
+{
+    data->voiceParameters.osc1.waveform = (DunneCore::OscWaveform)value;
+}
+float OscSynth::getWaveform(void)
+{
+    return (float)data->voiceParameters.osc1.waveform;
 }

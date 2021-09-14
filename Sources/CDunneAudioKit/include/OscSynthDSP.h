@@ -31,6 +31,8 @@ typedef NS_ENUM(AUParameterAddress, OscSynthParameter)
     OscSynthParameterFilterSustainLevel,
     OscSynthParameterFilterReleaseDuration,
 
+    OscSynthParameterWaveform,
+
     // ensure this is always last in the list, to simplify parameter addressing
     OscSynthParameterRampDuration,
 };

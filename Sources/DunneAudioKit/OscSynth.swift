@@ -11,6 +11,18 @@ import AudioKit
 import AudioKitEX
 import CDunneAudioKit
 
+public enum OscSynthWaveForm: Int {
+    case sinusoid
+    case square
+    case triangle
+    case sawtooth
+    case hammond
+
+    var auValue: Float {
+        return Float(rawValue)
+    }
+}
+
 /// OscSynth
 ///
 public class OscSynth: Node {
@@ -193,6 +205,18 @@ public class OscSynth: Node {
     /// Filter Amplitude release duration (seconds)
     @Parameter(filterReleaseDurationDef) public var filterReleaseDuration: AUValue
 
+    /// Specification details for oscillatorWaveform
+    private static let oscillatorWaveformDef = NodeParameterDef(
+        identifier: "oscillatorWaveform",
+        name: "Oscillator Waveform",
+        address: akGetParameterAddress("OscSynthParameterWaveform"),
+        defaultValue: 0,
+        range: 0 ... 4,
+        unit: .indexed)
+
+    /// Oscillator Waveform (0 = sinusoid, 1 = square, 2 = triangle, 3 = sawtooth, 4 = hammond
+    @Parameter(oscillatorWaveformDef) private var oscillatorWaveform: AUValue
+
     // MARK: - Initialization
 
     /// Initialize this OscSynth node
@@ -216,6 +240,7 @@ public class OscSynth: Node {
     ///
     public init(
         masterVolume: AUValue = masterVolumeDef.defaultValue,
+        waveform: OscSynthWaveForm = .sinusoid,
         pitchBend: AUValue = pitchBendDef.defaultValue,
         vibratoDepth: AUValue = vibratoDepthDef.defaultValue,
         filterCutoff: AUValue = filterCutoffDef.defaultValue,
@@ -235,6 +260,7 @@ public class OscSynth: Node {
         setupParameters()
 
         self.masterVolume = masterVolume
+        self.oscillatorWaveform = waveform.auValue
         self.pitchBend = pitchBend
         self.vibratoDepth = vibratoDepth
         self.filterCutoff = filterCutoff

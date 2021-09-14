@@ -17,11 +17,11 @@ namespace DunneCore
 {
 
     enum OscWaveform {
-        sin = 0,
-        sqr = 1,
-        tri = 2,
-        saw = 3,
-        hmd = 4
+        sinusoid = 0,
+        square = 1,
+        triangle = 2,
+        sawtooth = 3,
+        hammond = 4
     };
 
     struct OscParameters

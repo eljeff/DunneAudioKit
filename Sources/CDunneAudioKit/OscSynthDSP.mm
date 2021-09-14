@@ -113,6 +113,9 @@ void OscSynthDSP::setParameter(uint64_t address, float value, bool immediate)
         case OscSynthParameterFilterReleaseDuration:
             setFilterReleaseDurationSeconds(value);
             break;
+        case OscSynthParameterWaveform:
+            setWaveform(value);
+            break;
     }
 }
 
@@ -150,8 +153,8 @@ float OscSynthDSP::getParameter(uint64_t address)
             return getFilterDecayDurationSeconds();
         case OscSynthParameterFilterSustainLevel:
             return getFilterSustainFraction();
-        case OscSynthParameterFilterReleaseDuration:
-            return getFilterReleaseDurationSeconds();
+        case OscSynthParameterWaveform:
+            return getWaveform();
     }
     return 0;
 }
@@ -232,4 +235,5 @@ AK_REGISTER_PARAMETER(OscSynthParameterFilterAttackDuration)
 AK_REGISTER_PARAMETER(OscSynthParameterFilterDecayDuration)
 AK_REGISTER_PARAMETER(OscSynthParameterFilterSustainLevel)
 AK_REGISTER_PARAMETER(OscSynthParameterFilterReleaseDuration)
+AK_REGISTER_PARAMETER(OscSynthParameterWaveform)
 AK_REGISTER_PARAMETER(OscSynthParameterRampDuration)
