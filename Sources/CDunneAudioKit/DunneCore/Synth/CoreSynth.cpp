@@ -51,6 +51,38 @@ CoreSynth::CoreSynth()
         data->voice[i]->ampEG.pParameters = &data->ampEGParameters;
         data->voice[i]->filterEG.pParameters = &data->filterEGParameters;
     }
+
+    data->voiceParameters.osc1.phases = 4;
+    data->voiceParameters.osc1.frequencySpread = 25.0f;
+    data->voiceParameters.osc1.panSpread = 0.95f;
+    data->voiceParameters.osc1.pitchOffset = 0.0f;
+    data->voiceParameters.osc1.mixLevel = 0.7f;
+
+    data->voiceParameters.osc2.phases = 2;
+    data->voiceParameters.osc2.frequencySpread = 15.0f;
+    data->voiceParameters.osc2.panSpread = 1.0f;
+    data->voiceParameters.osc2.pitchOffset = -12.0f;
+    data->voiceParameters.osc2.mixLevel = 0.6f;
+
+    data->voiceParameters.osc3.drawbars[0] = 0.6f;
+    data->voiceParameters.osc3.drawbars[1] = 1.0f;
+    data->voiceParameters.osc3.drawbars[2] = 1.0;
+    data->voiceParameters.osc3.drawbars[3] = 1.0f;
+    data->voiceParameters.osc3.drawbars[4] = 0.0f;
+    data->voiceParameters.osc3.drawbars[5] = 0.0f;
+    data->voiceParameters.osc3.drawbars[6] = 0.4f;
+    data->voiceParameters.osc3.drawbars[7] = 0.0f;
+    data->voiceParameters.osc3.drawbars[8] = 0.0f;
+    data->voiceParameters.osc3.drawbars[9] = 0.0f;
+    data->voiceParameters.osc3.drawbars[10] = 0.0f;
+    data->voiceParameters.osc3.drawbars[11] = 0.0f;
+    data->voiceParameters.osc3.drawbars[12] = 0.0f;
+    data->voiceParameters.osc3.drawbars[13] = 0.0f;
+    data->voiceParameters.osc3.drawbars[14] = 0.0f;
+    data->voiceParameters.osc3.drawbars[15] = 0.0f;
+    data->voiceParameters.osc3.mixLevel = 0.5f;
+
+    data->voiceParameters.filterStages = 2;
 }
 
 CoreSynth::~CoreSynth()
@@ -74,38 +106,6 @@ int CoreSynth::init(double sampleRate)
     
     data->vibratoLFO.waveTable.sinusoid();
     data->vibratoLFO.init(sampleRate/SYNTH_CHUNKSIZE, 5.0f);
-    
-    data->voiceParameters.osc1.phases = 4;
-    data->voiceParameters.osc1.frequencySpread = 25.0f;
-    data->voiceParameters.osc1.panSpread = 0.95f;
-    data->voiceParameters.osc1.pitchOffset = 0.0f;
-    data->voiceParameters.osc1.mixLevel = 0.7f;
-    
-    data->voiceParameters.osc2.phases = 2;
-    data->voiceParameters.osc2.frequencySpread = 15.0f;
-    data->voiceParameters.osc2.panSpread = 1.0f;
-    data->voiceParameters.osc2.pitchOffset = -12.0f;
-    data->voiceParameters.osc2.mixLevel = 0.6f;
-    
-    data->voiceParameters.osc3.drawbars[0] = 0.6f;
-    data->voiceParameters.osc3.drawbars[1] = 1.0f;
-    data->voiceParameters.osc3.drawbars[2] = 1.0;
-    data->voiceParameters.osc3.drawbars[3] = 1.0f;
-    data->voiceParameters.osc3.drawbars[4] = 0.0f;
-    data->voiceParameters.osc3.drawbars[5] = 0.0f;
-    data->voiceParameters.osc3.drawbars[6] = 0.4f;
-    data->voiceParameters.osc3.drawbars[7] = 0.0f;
-    data->voiceParameters.osc3.drawbars[8] = 0.0f;
-    data->voiceParameters.osc3.drawbars[9] = 0.0f;
-    data->voiceParameters.osc3.drawbars[10] = 0.0f;
-    data->voiceParameters.osc3.drawbars[11] = 0.0f;
-    data->voiceParameters.osc3.drawbars[12] = 0.0f;
-    data->voiceParameters.osc3.drawbars[13] = 0.0f;
-    data->voiceParameters.osc3.drawbars[14] = 0.0f;
-    data->voiceParameters.osc3.drawbars[15] = 0.0f;
-    data->voiceParameters.osc3.mixLevel = 0.5f;
-    
-    data->voiceParameters.filterStages = 2;
     
     data->segParameters[0].initialLevel = 0.0f;   // attack: ramp quickly to 0.2
     data->segParameters[0].finalLevel = 0.2f;
