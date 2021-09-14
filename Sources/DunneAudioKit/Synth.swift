@@ -184,9 +184,21 @@ public class Synth: Node {
         defaultValue: 0,
         range: 0 ... 10,
         unit: .seconds)
-    
+
     /// Filter Amplitude release duration (seconds)
     @Parameter(filterReleaseDurationDef) public var filterReleaseDuration: AUValue
+
+    /// Specification details for osc1MixDef
+    public static let osc1MixDef = NodeParameterDef(
+        identifier: "osc1Mix",
+        name: "Osc 1 Mix",
+        address: akGetParameterAddress("SynthParameterOsc1Mix"),
+        defaultValue: 1,
+        range: 0 ... 2,
+        unit: .generic)
+
+    /// Oscillator 1 mix (fraction)
+    @Parameter(osc1MixDef) public var osc1Mix: AUValue
 
     // MARK: - Initialization
 
@@ -224,7 +236,8 @@ public class Synth: Node {
         filterAttackDuration: AUValue = filterAttackDurationDef.defaultValue,
         filterDecayDuration: AUValue = filterDecayDurationDef.defaultValue,
         filterSustainLevel: AUValue = filterSustainLevelDef.defaultValue,
-        filterReleaseDuration: AUValue = filterReleaseDurationDef.defaultValue
+        filterReleaseDuration: AUValue = filterReleaseDurationDef.defaultValue,
+        osc1Mix: AUValue = osc1MixDef.defaultValue
     ) {
         
         setupParameters()
@@ -243,7 +256,7 @@ public class Synth: Node {
         self.filterDecayDuration = filterDecayDuration
         self.filterSustainLevel = filterSustainLevel
         self.filterReleaseDuration = filterReleaseDuration
-        
+        self.osc1Mix = osc1Mix
     }
 
     /// Play a note on the synth

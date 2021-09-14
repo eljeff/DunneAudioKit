@@ -108,6 +108,9 @@ void SynthDSP::setParameter(uint64_t address, float value, bool immediate)
         case SynthParameterFilterReleaseDuration:
             setFilterReleaseDurationSeconds(value);
             break;
+        case SynthParameterOsc1Mix:
+            setOsc1Mix(value);
+            break;
     }
 }
 
@@ -147,6 +150,8 @@ float SynthDSP::getParameter(uint64_t address)
             return getFilterSustainFraction();
         case SynthParameterFilterReleaseDuration:
             return getFilterReleaseDurationSeconds();
+        case SynthParameterOsc1Mix:
+            return getOsc1Mix();
     }
     return 0;
 }
@@ -227,4 +232,5 @@ AK_REGISTER_PARAMETER(SynthParameterFilterAttackDuration)
 AK_REGISTER_PARAMETER(SynthParameterFilterDecayDuration)
 AK_REGISTER_PARAMETER(SynthParameterFilterSustainLevel)
 AK_REGISTER_PARAMETER(SynthParameterFilterReleaseDuration)
+AK_REGISTER_PARAMETER(SynthParameterOsc1Mix)
 AK_REGISTER_PARAMETER(SynthParameterRampDuration)

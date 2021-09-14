@@ -27,6 +27,8 @@ typedef NS_ENUM(AUParameterAddress, SynthParameter)
     SynthParameterFilterSustainLevel,
     SynthParameterFilterReleaseDuration,
 
+    SynthParameterOsc1Mix,
+
     // ensure this is always last in the list, to simplify parameter addressing
     SynthParameterRampDuration,
 };
