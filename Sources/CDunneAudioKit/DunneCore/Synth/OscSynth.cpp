@@ -279,22 +279,21 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
         printf("stopping %i immediate\n", noteNumber);
         pVoice->stop(eventCounter);
     } else if (isMonophonic) {
-        int key = data->pedalLogic.firstKeyDown();
-        auto noteFrequency = pow(2.0, (key - 69.0) / 12.0) * 440.0;
-        if (key < 0) {
-            printf("release %i  %f \n", noteNumber, noteFrequency);
+        int fallbackKey = data->pedalLogic.mostRecentKeyDown(); //Fixme: using lowest played note everytime... should use most recent note
+        auto noteFrequency = pow(2.0, (fallbackKey - 69.0) / 12.0) * 440.0;
+        if (fallbackKey < 0) {
             pVoice->release(eventCounter);
         } else if (isLegato) {
             printf("restartNewNoteLegato %i %f \n", key, noteFrequency);
-            pVoice->restartNewNoteLegato(eventCounter, (unsigned)key, noteFrequency);
+            pVoice->restartNewNoteLegato(eventCounter, (unsigned)fallbackKey, noteFrequency);
         } else {
             unsigned velocity = 100;
             if (pVoice->noteNumber >= 0) {
                 printf("restart %i %f \n", key, noteFrequency);
-                pVoice->restart(eventCounter, key, noteFrequency, velocity / 127.0f);
+                pVoice->restart(eventCounter, fallbackKey, noteFrequency, velocity / 127.0f);
             } else {
                 printf("start %i %f \n", key, noteFrequency);
-                pVoice->start(eventCounter, key, noteFrequency, velocity / 127.0f);
+                pVoice->start(eventCounter, fallbackKey, noteFrequency, velocity / 127.0f);
             }
         }
     } else {

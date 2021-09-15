@@ -15,11 +15,17 @@ namespace DunneCore
     {
         bool noteShouldStopBeforePlayingAgain = false;
         
-        if (pedalIsDown && keyDown[noteNumber])
+        if (pedalIsDown && keyDown[noteNumber]) {
             noteShouldStopBeforePlayingAgain = true;
-        else
+        } else {
+            activeNotes.push_back(noteNumber);
             keyDown[noteNumber] = true;
-        
+        }
+
+        printf("activeNotes:\n");
+        for (int i = 0; i < activeNotes.size(); i++) {
+            printf("activeNote %i = %i\n", i, activeNotes.at(i));
+        }
         isPlaying[noteNumber] = true;
         return noteShouldStopBeforePlayingAgain;
     }
@@ -33,10 +39,11 @@ namespace DunneCore
             noteShouldStop = true;
             isPlaying[noteNumber] = false;
         }
+        activeNotes.erase(std::remove(activeNotes.begin(), activeNotes.end(), noteNumber), activeNotes.end());
         keyDown[noteNumber] = false;
         return noteShouldStop;
     }
-    
+
     void SustainPedalLogic::pedalDown() { pedalIsDown = true; }
     
     void SustainPedalLogic::pedalUp() { pedalIsDown = false; }
@@ -56,5 +63,14 @@ namespace DunneCore
     {
         for (int i = 0; i < kMidiNoteNumbers; i++) if (keyDown[i]) return i;
         return -1;
+    }
+
+    int SustainPedalLogic::mostRecentKeyDown()
+    {
+        if (activeNotes.size() > 0) {
+            return activeNotes.back();
+        } else {
+            return -1;
+        }
     }
 }

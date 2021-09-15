@@ -1,6 +1,7 @@
 // Copyright AudioKit. All Rights Reserved.
 
 #pragma once
+#include <vector>
 
 namespace DunneCore
 {
@@ -11,6 +12,7 @@ namespace DunneCore
         bool keyDown[kMidiNoteNumbers];
         bool isPlaying[kMidiNoteNumbers];
         bool pedalIsDown;
+        std::vector<uint8_t> activeNotes;
         
     public:
         SustainPedalLogic();
@@ -23,6 +25,7 @@ namespace DunneCore
         bool isNoteSustaining(unsigned noteNumber);
         bool isAnyKeyDown();
         int firstKeyDown();
+        int mostRecentKeyDown();
         void pedalUp();
     };
 
