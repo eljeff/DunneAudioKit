@@ -21,11 +21,7 @@ namespace DunneCore
             activeNotes.push_back(noteNumber);
             keyDown[noteNumber] = true;
         }
-
-        printf("activeNotes:\n");
-        for (int i = 0; i < activeNotes.size(); i++) {
-            printf("activeNote %i = %i\n", i, activeNotes.at(i));
-        }
+        
         isPlaying[noteNumber] = true;
         return noteShouldStopBeforePlayingAgain;
     }
