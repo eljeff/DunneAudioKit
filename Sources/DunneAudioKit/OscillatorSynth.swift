@@ -229,6 +229,18 @@ public class OscillatorSynth: Node {
     /// Oscillator Waveform (0 = sinusoid, 1 = square, 2 = triangle, 3 = sawtooth, 4 = hammond
     @Parameter(oscillatorWaveformDef) private var oscillatorWaveform: AUValue
 
+    /// Specification details for isMonophonic
+    public static let isMonophonicDef = NodeParameterDef(
+        identifier: "isMonophonic",
+        name: "Monophonic",
+        address: akGetParameterAddress("OscSynthParameterIsMonophonic"),
+        defaultValue: 0,
+        range: 0 ... 1,
+        unit: .boolean)
+
+    /// Is Monophonic - play only one note at a time
+    @Parameter(isMonophonicDef) public var isMonophonic: AUValue
+
     // MARK: - Initialization
 
     /// Initialize this OscSynth node
