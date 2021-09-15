@@ -65,12 +65,13 @@ namespace DunneCore
         ampEG.restart();
     }
 
-void OscVoice::restartNewNoteLegato(unsigned evt, unsigned note, float frequency)
-{
-    event = evt;
-    noteFrequency = frequency;
-    noteNumber = note;
-}
+    void OscVoice::restartNewNoteLegato(unsigned evt, unsigned noteNum, float frequency)
+    {
+        event = evt;
+        osc1.setFrequency(frequency * pow(2.0f, pParameters->osc1.pitchOffset / 12.0f));
+        noteNumber = noteNum;
+        noteFrequency = frequency;
+    }
 
     void OscVoice::release(unsigned evt)
     {

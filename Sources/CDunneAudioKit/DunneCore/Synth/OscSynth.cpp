@@ -48,7 +48,7 @@ OscSynth::OscSynth()
 , cutoffEnvelopeStrength(0.0f)
 , linearResonance(1.0f)
 , isMonophonic(true)
-, isLegato(false)
+, isLegato(true)
 , data(new InternalData)
 {
     for (int i=0; i < MAX_VOICE_COUNT; i++)
@@ -178,9 +178,9 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
 
     if (isMonophonic)
     {
-        printf("playing monophonic note\n");
         if (isLegato && anotherKeyWasDown)
         {
+            printf("playing legato note %i\n", noteNumber);
             // is our one and only voice playing some note?
             DunneCore::OscVoice *pVoice = data->voice[0].get();
             if (pVoice->noteNumber >= 0)
@@ -196,6 +196,7 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
         }
         else
         {
+            printf("playing monophonic note %i\n", noteNumber);
             // monophonic but not legato: always start a new note
             DunneCore::OscVoice *pVoice = data->voice[0].get();
             if (pVoice->noteNumber >= 0)
@@ -206,39 +207,7 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
             return;
         }
     } else{
-        printf("playing ployphonic note\n");
-    /*
-    else // polyphonic
-    {
-        // is any voice already playing this note?
-        DunneCore::SamplerVoice *pVoice = voicePlayingNote(noteNumber);
-        if (pVoice)
-        {
-            DunneCore::KeyMappedSampleBuffer *pBuf = lookupSample(noteNumber, velocity);
-            if (pBuf == 0) return; // don't crash if someone forgets to build map
-            // re-start the note
-            pVoice->restartSameNote(velocity / 127.0f, pBuf);
-            return;
-        }
-
-        // find a free voice (with noteNumber < 0) to play the note
-        int polyphony = isMonophonic ? 1 : MAX_POLYPHONY;
-        for (int i = 0; i < polyphony; i++)
-        {
-            DunneCore::SamplerVoice *pVoice = &data->voice[i];
-            if (pVoice->noteNumber < 0)
-            {
-                // found a free voice: assign it to play this note
-                DunneCore::KeyMappedSampleBuffer *pBuf = lookupSample(noteNumber, velocity);
-                if (pBuf == 0) return;  // don't crash if someone forgets to build map
-                pVoice->start(noteNumber, currentSampleRate, noteFrequency, velocity / 127.0f, pBuf);
-                lastPlayedNoteNumber = noteNumber;
-                return;
-            }
-        }
-    }
-*/
-    /* OLD METHOD BELOW */
+        printf("playing polyphonic note %i\n", noteNumber);
     // is any voice already playing this note?
         DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
         if (pVoice)
@@ -299,15 +268,37 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
 
 void OscSynth::stop(unsigned noteNumber, bool immediate)
 {
+    printf("stop note %i\n", noteNumber);
     DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
-    if (pVoice == 0) return;
-
-    if (immediate)
-    {
-        pVoice->stop(eventCounter);
+    if (pVoice == 0) {
+        printf("pVoice = 0, bailing");
+        return;
     }
-    else
-    {
+
+    if (immediate) {
+        printf("stopping %i immediate\n", noteNumber);
+        pVoice->stop(eventCounter);
+    } else if (isMonophonic) {
+        int key = data->pedalLogic.firstKeyDown();
+        auto noteFrequency = pow(2.0, (key - 69.0) / 12.0) * 440.0;
+        if (key < 0) {
+            printf("release %i  %f \n", noteNumber, noteFrequency);
+            pVoice->release(eventCounter);
+        } else if (isLegato) {
+            printf("restartNewNoteLegato %i %f \n", key, noteFrequency);
+            pVoice->restartNewNoteLegato(eventCounter, (unsigned)key, noteFrequency);
+        } else {
+            unsigned velocity = 100;
+            if (pVoice->noteNumber >= 0) {
+                printf("restart %i %f \n", key, noteFrequency);
+                pVoice->restart(eventCounter, key, noteFrequency, velocity / 127.0f);
+            } else {
+                printf("start %i %f \n", key, noteFrequency);
+                pVoice->start(eventCounter, key, noteFrequency, velocity / 127.0f);
+            }
+        }
+    } else {
+        printf("release poly %i \n", noteNumber);
         pVoice->release(eventCounter);
     }
 }
