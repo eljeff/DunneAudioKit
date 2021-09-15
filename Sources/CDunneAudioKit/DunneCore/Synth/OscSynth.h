@@ -60,7 +60,22 @@ protected:
     unsigned eventCounter;
 
     // performance parameters
-    float masterVolume, pitchOffset, vibratoDepth, vibratoFreq;
+    float masterVolume, pitchOffset, vibratoDepth, vibratoFreq, glideRate;;
+
+    // parameters for mono-mode only
+
+    // default false
+    bool isMonophonic;
+
+    // true if notes shouldn't retrigger in mono mode
+    bool isLegato;
+
+    // semitones/sec
+    float portamentoRate;
+
+    // mono-mode state
+    unsigned lastPlayedNoteNumber;
+    float lastPlayedNoteFrequency;
 
     // filter parameters
 

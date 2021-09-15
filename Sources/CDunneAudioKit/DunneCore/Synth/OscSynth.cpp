@@ -47,6 +47,10 @@ OscSynth::OscSynth()
 , cutoffMultiple(1024.0f)
 , cutoffEnvelopeStrength(0.0f)
 , linearResonance(1.0f)
+, glideRate(0.0f)   // 0 sec/octave means "no glide"
+, isMonophonic(false)
+, isLegato(false)
+, portamentoRate(1.0f)
 , data(new InternalData)
 {
     for (int i=0; i < MAX_VOICE_COUNT; i++)
