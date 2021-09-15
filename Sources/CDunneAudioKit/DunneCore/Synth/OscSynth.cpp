@@ -47,10 +47,8 @@ OscSynth::OscSynth()
 , cutoffMultiple(1024.0f)
 , cutoffEnvelopeStrength(0.0f)
 , linearResonance(1.0f)
-, glideRate(0.0f)   // 0 sec/octave means "no glide"
-, isMonophonic(false)
+, isMonophonic(true)
 , isLegato(false)
-, portamentoRate(1.0f)
 , data(new InternalData)
 {
     for (int i=0; i < MAX_VOICE_COUNT; i++)
@@ -137,11 +135,21 @@ void OscSynth::deinit()
 {
 }
 
+DunneCore::OscVoice *OscSynth::voicePlayingNote(unsigned noteNumber)
+{
+    for (int i=0; i < MAX_VOICE_COUNT; i++)
+    {
+        if (data->voice[i]->noteNumber == noteNumber) return data->voice[i].get();
+    }
+    return 0;
+}
+
 void OscSynth::playNote(unsigned noteNumber, unsigned velocity, float noteFrequency)
 {
     eventCounter++;
+    bool anotherKeyWasDown = data->pedalLogic.isAnyKeyDown();
     data->pedalLogic.keyDownAction(noteNumber);
-    play(noteNumber, velocity, noteFrequency);
+    play(noteNumber, velocity, noteFrequency, anotherKeyWasDown);
 }
 
 void OscSynth::stopNote(unsigned noteNumber, bool immediate)
@@ -165,71 +173,127 @@ void OscSynth::sustainPedal(bool down)
     }
 }
 
-DunneCore::OscVoice *OscSynth::voicePlayingNote(unsigned noteNumber)
+void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency, bool anotherKeyWasDown)
 {
-    for (int i=0; i < MAX_VOICE_COUNT; i++)
-    {
-        if (data->voice[i]->noteNumber == noteNumber) return data->voice[i].get();
-    }
-    return 0;
-}
 
-void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency)
-{
-    // is any voice already playing this note?
-    DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
-    if (pVoice)
+    if (isMonophonic)
     {
-        // re-start the note
-        pVoice->restart(eventCounter, velocity / 127.0f);
-        return;
-    }
-
-    // find a free voice (with noteNumber < 0) to play the note
-    for (int i=0; i < MAX_VOICE_COUNT; i++)
-    {
-        auto pVoice = data->voice[i].get();
-        if (pVoice->noteNumber < 0)
+        printf("playing monophonic note\n");
+        if (isLegato && anotherKeyWasDown)
         {
-            // found a free voice: assign it to play this note
-            pVoice->start(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+            // is our one and only voice playing some note?
+            DunneCore::OscVoice *pVoice = data->voice[0].get();
+            if (pVoice->noteNumber >= 0)
+            {
+                pVoice->restartNewNoteLegato(eventCounter, noteNumber, noteFrequency);
+            }
+            else
+            {
+                pVoice->start(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+            }
+            lastPlayedNoteNumber = noteNumber;
             return;
         }
-    }
-
-    // all oscillators in use: find "stalest" voice to steal
-    unsigned greatestDiffOfAll = 0;
-    DunneCore::OscVoice *pStalestVoiceOfAll = 0;
-    unsigned greatestDiffInRelease = 0;
-    DunneCore::OscVoice *pStalestVoiceInRelease = 0;
-    for (int i=0; i < MAX_VOICE_COUNT; i++)
-    {
-        auto pVoice = data->voice[i].get();
-        unsigned diff = eventCounter - pVoice->event;
-        if (pVoice->ampEG.isReleasing())
+        else
         {
-            if (diff > greatestDiffInRelease)
+            // monophonic but not legato: always start a new note
+            DunneCore::OscVoice *pVoice = data->voice[0].get();
+            if (pVoice->noteNumber >= 0)
+                pVoice->restart(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+            else
+                pVoice->start(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+            lastPlayedNoteNumber = noteNumber;
+            return;
+        }
+    } else{
+        printf("playing ployphonic note\n");
+    /*
+    else // polyphonic
+    {
+        // is any voice already playing this note?
+        DunneCore::SamplerVoice *pVoice = voicePlayingNote(noteNumber);
+        if (pVoice)
+        {
+            DunneCore::KeyMappedSampleBuffer *pBuf = lookupSample(noteNumber, velocity);
+            if (pBuf == 0) return; // don't crash if someone forgets to build map
+            // re-start the note
+            pVoice->restartSameNote(velocity / 127.0f, pBuf);
+            return;
+        }
+
+        // find a free voice (with noteNumber < 0) to play the note
+        int polyphony = isMonophonic ? 1 : MAX_POLYPHONY;
+        for (int i = 0; i < polyphony; i++)
+        {
+            DunneCore::SamplerVoice *pVoice = &data->voice[i];
+            if (pVoice->noteNumber < 0)
             {
-                greatestDiffInRelease = diff;
-                pStalestVoiceInRelease = pVoice;
+                // found a free voice: assign it to play this note
+                DunneCore::KeyMappedSampleBuffer *pBuf = lookupSample(noteNumber, velocity);
+                if (pBuf == 0) return;  // don't crash if someone forgets to build map
+                pVoice->start(noteNumber, currentSampleRate, noteFrequency, velocity / 127.0f, pBuf);
+                lastPlayedNoteNumber = noteNumber;
+                return;
             }
         }
-        if (diff > greatestDiffOfAll)
+    }
+*/
+    /* OLD METHOD BELOW */
+    // is any voice already playing this note?
+        DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
+        if (pVoice)
         {
-            greatestDiffOfAll = diff;
-            pStalestVoiceOfAll = pVoice;
+            // re-start the note
+            pVoice->restart(eventCounter, velocity / 127.0f);
+            return;
         }
-    }
 
-    if (pStalestVoiceInRelease != 0)
-    {
-        // We have a stalest note in its release phase: restart that one
-        pStalestVoiceInRelease->restart(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
-    }
-    else
-    {
-        // No notes in release phase: restart the "stalest" one we could find
-        pStalestVoiceOfAll->restart(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+        // find a free voice (with noteNumber < 0) to play the note
+        for (int i=0; i < MAX_VOICE_COUNT; i++)
+        {
+            auto pVoice = data->voice[i].get();
+            if (pVoice->noteNumber < 0)
+            {
+                // found a free voice: assign it to play this note
+                pVoice->start(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+                return;
+            }
+        }
+
+        // all oscillators in use: find "stalest" voice to steal
+        unsigned greatestDiffOfAll = 0;
+        DunneCore::OscVoice *pStalestVoiceOfAll = 0;
+        unsigned greatestDiffInRelease = 0;
+        DunneCore::OscVoice *pStalestVoiceInRelease = 0;
+        for (int i=0; i < MAX_VOICE_COUNT; i++)
+        {
+            auto pVoice = data->voice[i].get();
+            unsigned diff = eventCounter - pVoice->event;
+            if (pVoice->ampEG.isReleasing())
+            {
+                if (diff > greatestDiffInRelease)
+                {
+                    greatestDiffInRelease = diff;
+                    pStalestVoiceInRelease = pVoice;
+                }
+            }
+            if (diff > greatestDiffOfAll)
+            {
+                greatestDiffOfAll = diff;
+                pStalestVoiceOfAll = pVoice;
+            }
+        }
+
+        if (pStalestVoiceInRelease != 0)
+        {
+            // We have a stalest note in its release phase: restart that one
+            pStalestVoiceInRelease->restart(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+        }
+        else
+        {
+            // No notes in release phase: restart the "stalest" one we could find
+            pStalestVoiceOfAll->restart(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+        }
     }
 }
 

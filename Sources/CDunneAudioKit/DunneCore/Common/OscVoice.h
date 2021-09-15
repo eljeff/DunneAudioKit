@@ -61,6 +61,8 @@ namespace DunneCore
 
         float phaseOffset = (float)rand() / RAND_MAX;   // generate a random number 0-1 to offset lfo phase per voice
 
+        float samplingRate;
+
         OscVoice(std::mt19937* gen) : noteNumber(-1), osc1(gen) {}
 
         void init(double sampleRate,
@@ -74,6 +76,7 @@ namespace DunneCore
         void start(unsigned evt, unsigned noteNumber, float frequency, float volume);
         void restart(unsigned evt, float volume);
         void restart(unsigned evt, unsigned noteNumber, float frequency, float volume);
+        void restartNewNoteLegato(unsigned evt, unsigned note, float frequency);
         void release(unsigned evt);
         void stop(unsigned evt);
 

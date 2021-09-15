@@ -16,6 +16,8 @@ namespace DunneCore
                           OscVoiceParameters *pParams,
                           EnvelopeParameters *pEnvParameters)
     {
+        samplingRate = sampleRate;
+        
         pParameters = pParams;
         event = 0;
         noteNumber = -1;
@@ -62,6 +64,13 @@ namespace DunneCore
         noteFrequency = frequency;
         ampEG.restart();
     }
+
+void OscVoice::restartNewNoteLegato(unsigned evt, unsigned note, float frequency)
+{
+    event = evt;
+    noteFrequency = frequency;
+    noteNumber = note;
+}
 
     void OscVoice::release(unsigned evt)
     {

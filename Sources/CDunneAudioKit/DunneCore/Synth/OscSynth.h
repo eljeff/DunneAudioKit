@@ -60,7 +60,7 @@ protected:
     unsigned eventCounter;
 
     // performance parameters
-    float masterVolume, pitchOffset, vibratoDepth, vibratoFreq, glideRate;;
+    float masterVolume, pitchOffset, vibratoDepth, vibratoFreq;
 
     // parameters for mono-mode only
 
@@ -69,9 +69,6 @@ protected:
 
     // true if notes shouldn't retrigger in mono mode
     bool isLegato;
-
-    // semitones/sec
-    float portamentoRate;
 
     // mono-mode state
     unsigned lastPlayedNoteNumber;
@@ -88,7 +85,7 @@ protected:
     /// resonance [-20 dB, +20 dB] becomes linear [10.0, 0.1]
     float linearResonance;
 
-    void play(unsigned noteNumber, unsigned velocity, float noteFrequency);
+    void play(unsigned noteNumber, unsigned velocity, float noteFrequency, bool anotherKeyWasDown);
     void stop(unsigned noteNumber, bool immediate);
 
     DunneCore::OscVoice *voicePlayingNote(unsigned noteNumber);
