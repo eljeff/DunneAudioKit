@@ -203,10 +203,11 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
                 pVoice->restart(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
             else
                 pVoice->start(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+            
             lastPlayedNoteNumber = noteNumber;
             return;
         }
-    } else{
+    } else {
         printf("playing polyphonic note %i\n", noteNumber);
     // is any voice already playing this note?
         DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
@@ -281,7 +282,7 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
         printf("stopping %i immediate\n", noteNumber);
         pVoice->stop(eventCounter);
     } else if (isMonophonic) {
-        int fallbackKey = data->pedalLogic.mostRecentKeyDown(); //Fixme: using lowest played note everytime... should use most recent note
+        int fallbackKey = data->pedalLogic.mostRecentKeyDown();
         auto noteFrequency = pow(2.0, (fallbackKey - 69.0) / 12.0) * 440.0;
         if (fallbackKey < 0) {
             pVoice->release(eventCounter);
