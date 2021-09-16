@@ -293,7 +293,7 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
             unsigned velocity = 100;
             if (pVoice->noteNumber >= 0) {
                 printf("restart %i %f \n", fallbackKey, noteFrequency);
-                pVoice->restart(eventCounter, fallbackKey, noteFrequency, velocity / 127.0f);
+                pVoice->restartMonophonic(eventCounter, fallbackKey, noteFrequency, velocity / 127.0f);
             } else {
                 printf("start %i %f \n", fallbackKey, noteFrequency);
                 pVoice->start(eventCounter, fallbackKey, noteFrequency, velocity / 127.0f);
