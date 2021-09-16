@@ -139,7 +139,6 @@ DunneCore::OscVoice *OscSynth::voicePlayingNote(unsigned noteNumber)
 {
     for (int i=0; i < MAX_VOICE_COUNT; i++)
     {
-        printf("voice %i note is %i\n", i, data->voice[i]->noteNumber);
         if (data->voice[i]->noteNumber == noteNumber) return data->voice[i].get();
     }
     return 0;
@@ -275,7 +274,7 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
     printf("stop note %i\n", noteNumber);
     DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
     if (pVoice == 0) {
-        printf("pVoice = 0, bailing\n");
+        printf("pVoice = 0, bailing");
         return;
     }
 
@@ -286,7 +285,6 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
         int fallbackKey = data->pedalLogic.mostRecentKeyDown();
         auto noteFrequency = pow(2.0, (fallbackKey - 69.0) / 12.0) * 440.0;
         if (fallbackKey < 0) {
-            printf("pVoice->release\n");
             pVoice->release(eventCounter);
         } else if (isLegato) {
             printf("restartNewNoteLegato %i %f \n", fallbackKey, noteFrequency);

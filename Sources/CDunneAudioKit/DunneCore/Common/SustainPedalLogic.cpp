@@ -23,7 +23,6 @@ namespace DunneCore
         }
         
         isPlaying[noteNumber] = true;
-        printf("keyDown %i\n", noteNumber);
         return noteShouldStopBeforePlayingAgain;
     }
     
@@ -38,7 +37,6 @@ namespace DunneCore
         }
         activeNotes.erase(std::remove(activeNotes.begin(), activeNotes.end(), noteNumber), activeNotes.end());
         keyDown[noteNumber] = false;
-        printf("keyUp %i\n", noteNumber);
         return noteShouldStop;
     }
 
@@ -66,10 +64,8 @@ namespace DunneCore
     int SustainPedalLogic::mostRecentKeyDown()
     {
         if (activeNotes.size() > 0) {
-            printf("mostrecent key %i\n", activeNotes.back());
             return activeNotes.back();
         } else {
-            printf("no mostrecent key\n");
             return -1;
         }
     }
