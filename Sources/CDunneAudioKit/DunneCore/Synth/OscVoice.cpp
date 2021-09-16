@@ -38,6 +38,7 @@ namespace DunneCore
 
     void OscVoice::start(unsigned evt, unsigned noteNum, float frequency, float volume)
     {
+        printf("voice start\n");
         event = evt;
         noteVolume = volume;
         osc1.setFrequency(frequency * pow(2.0f, pParameters->osc1.pitchOffset / 12.0f));
@@ -50,6 +51,7 @@ namespace DunneCore
 
     void OscVoice::restart(unsigned evt, float volume)
     {
+        printf("voice restart (same note)\n");
         event = evt;
         newNoteNumber = -1;
         newNoteVol = volume;
@@ -58,6 +60,7 @@ namespace DunneCore
 
     void OscVoice::restart(unsigned evt, unsigned noteNum, float frequency, float volume)
     {
+        printf("voice restart (new note) %i\n", noteNum);
         event = evt;
         newNoteNumber = noteNum;
         newNoteVol = volume;
@@ -77,6 +80,7 @@ namespace DunneCore
 
     void OscVoice::restartNewNoteLegato(unsigned evt, unsigned noteNum, float frequency)
     {
+        printf("voice restartNewNoteLegato\n");
         event = evt;
         osc1.setFrequency(frequency * pow(2.0f, pParameters->osc1.pitchOffset / 12.0f));
         noteNumber = noteNum;
@@ -85,6 +89,7 @@ namespace DunneCore
 
     void OscVoice::release(unsigned evt)
     {
+        printf("voice release\n");
         event = evt;
         ampEG.release();
         filterEG.release();
@@ -92,6 +97,7 @@ namespace DunneCore
 
     void OscVoice::stop(unsigned evt)
     {
+        printf("voice stop\n");
         event = evt;
         noteNumber = -1;
         ampEG.reset();
@@ -118,6 +124,7 @@ namespace DunneCore
                 if (newNoteNumber >= 0)
                 {
                     // restarting a "stolen" voice with a new note number
+                    printf("restarting stolen voice newNote %i note %i\n", newNoteNumber, noteNumber);
                     osc1.setFrequency(noteFrequency * pow(2.0f, pParameters->osc1.pitchOffset / 12.0f));
                     noteNumber = newNoteNumber;
                 }
