@@ -218,13 +218,15 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
         }
 
         // find a free voice (with noteNumber < 0) to play the note
-        for (int i=0; i < MAX_VOICE_COUNT; i++)
+        int polyphony = isMonophonic ? 1 : MAX_VOICE_COUNT;
+        for (int i=0; i < polyphony; i++)
         {
             auto pVoice = data->voice[i].get();
             if (pVoice->noteNumber < 0)
             {
                 // found a free voice: assign it to play this note
                 pVoice->start(eventCounter, noteNumber, noteFrequency, velocity / 127.0f);
+                lastPlayedNoteNumber = noteNumber;
                 return;
             }
         }
@@ -269,7 +271,7 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
 void OscSynth::stop(unsigned noteNumber, bool immediate)
 {
     printf("stop note %i\n", noteNumber);
-    DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
+    DunneCore::OscVoice *pVoice = isMonophonic ? data->voice[0].get() : voicePlayingNote(noteNumber);
     if (pVoice == 0) {
         printf("pVoice = 0, bailing");
         return;
