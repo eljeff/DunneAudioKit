@@ -64,6 +64,16 @@ namespace DunneCore
         noteFrequency = frequency;
         ampEG.restart();
     }
+    void OscVoice::restartMonophonic(unsigned evt, unsigned noteNum, float frequency, float volume)
+    {
+        printf("voice restartMonophonic (new note) %i\n", noteNum);
+        event = evt;
+        newNoteNumber = noteNum;
+        noteNumber = noteNum;
+        newNoteVol = volume;
+        noteFrequency = frequency;
+        ampEG.restart();
+    }
 
     void OscVoice::restartNewNoteLegato(unsigned evt, unsigned noteNum, float frequency)
     {

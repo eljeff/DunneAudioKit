@@ -77,6 +77,7 @@ namespace DunneCore
         void restart(unsigned evt, float volume);
         void restart(unsigned evt, unsigned noteNumber, float frequency, float volume);
         void restartNewNoteLegato(unsigned evt, unsigned noteNum, float frequency);
+        void restartMonophonic(unsigned evt, unsigned noteNum, float frequency, float volume);
         void release(unsigned evt);
         void stop(unsigned evt);
 
