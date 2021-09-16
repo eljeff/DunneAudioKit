@@ -271,7 +271,7 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
 void OscSynth::stop(unsigned noteNumber, bool immediate)
 {
     printf("stop note %i\n", noteNumber);
-    DunneCore::OscVoice *pVoice = isMonophonic ? data->voice[0].get() : voicePlayingNote(noteNumber);
+    DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
     if (pVoice == 0) {
         printf("pVoice = 0, bailing");
         return;
