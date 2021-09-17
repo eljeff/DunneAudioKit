@@ -139,7 +139,11 @@ DunneCore::OscVoice *OscSynth::voicePlayingNote(unsigned noteNumber)
 {
     for (int i=0; i < MAX_VOICE_COUNT; i++)
     {
-        if (data->voice[i]->noteNumber == noteNumber) return data->voice[i].get();
+        if (isMonophonic) {
+            if (data->voice[i]->noteNumber > 0) return data->voice[i].get();
+        } else {
+            if (data->voice[i]->noteNumber == noteNumber) return data->voice[i].get();
+        }
     }
     return 0;
 }
