@@ -293,6 +293,9 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
         } else if (isLegato) {
             printf("restartNewNoteLegato %i %f \n", fallbackKey, noteFrequency);
             pVoice->restartNewNoteLegato(eventCounter, (unsigned)fallbackKey, noteFrequency);
+        } else if (fallbackKey == pVoice->noteNumber) {
+            printf("same note bailing!\n");
+            return;
         } else {
             unsigned velocity = 100;
             if (pVoice->noteNumber >= 0) {
