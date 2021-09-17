@@ -184,7 +184,6 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
     {
         if (isLegato && anotherKeyWasDown)
         {
-            printf("playing legato note %i\n", noteNumber);
             // is our one and only voice playing some note?
             DunneCore::OscVoice *pVoice = data->voice[0].get();
             if (pVoice->noteNumber >= 0)
@@ -200,7 +199,6 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
         }
         else
         {
-            printf("playing monophonic note %i\n", noteNumber);
             // monophonic but not legato: always start a new note
             DunneCore::OscVoice *pVoice = data->voice[0].get();
             if (pVoice->noteNumber >= 0)
@@ -212,7 +210,6 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
             return;
         }
     } else {
-        printf("playing polyphonic note %i\n", noteNumber);
     // is any voice already playing this note?
         DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
         if (pVoice)
@@ -275,15 +272,12 @@ void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency,
 
 void OscSynth::stop(unsigned noteNumber, bool immediate)
 {
-    printf("stop note %i\n", noteNumber);
     DunneCore::OscVoice *pVoice = voicePlayingNote(noteNumber);
     if (pVoice == 0) {
-        printf("pVoice = 0, bailing");
         return;
     }
 
     if (immediate) {
-        printf("stopping %i immediate\n", noteNumber);
         pVoice->stop(eventCounter);
     } else if (isMonophonic) {
         int fallbackKey = data->pedalLogic.mostRecentKeyDown();
@@ -291,23 +285,18 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
         if (fallbackKey < 0) {
             pVoice->release(eventCounter);
         } else if (isLegato) {
-            printf("restartNewNoteLegato %i %f \n", fallbackKey, noteFrequency);
             pVoice->restartNewNoteLegato(eventCounter, (unsigned)fallbackKey, noteFrequency);
         } else if (fallbackKey == pVoice->noteNumber) {
-            printf("same note bailing!\n");
             return;
         } else {
             unsigned velocity = 100;
             if (pVoice->noteNumber >= 0) {
-                printf("restart %i %f \n", fallbackKey, noteFrequency);
                 pVoice->restartMonophonic(eventCounter, fallbackKey, noteFrequency, velocity / 127.0f);
             } else {
-                printf("start %i %f \n", fallbackKey, noteFrequency);
                 pVoice->start(eventCounter, fallbackKey, noteFrequency, velocity / 127.0f);
             }
         }
     } else {
-        printf("release poly %i \n", noteNumber);
         pVoice->release(eventCounter);
     }
 }
