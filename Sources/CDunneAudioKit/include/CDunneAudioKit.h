@@ -6,6 +6,7 @@
 #import "ModulatedDelayDSP.h"
 
 #import "SynthDSP.h"
+#import "OscSynthDSP.h"
 
 #import "Sampler_Typedefs.h"
 #import "SamplerDSP.h"
