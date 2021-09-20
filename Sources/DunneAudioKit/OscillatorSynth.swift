@@ -241,6 +241,18 @@ public class OscillatorSynth: Node {
     /// Is Monophonic - play only one note at a time
     @Parameter(isMonophonicDef) public var isMonophonic: AUValue
 
+    /// Specification details for isLegato
+    public static let isLegatoDef = NodeParameterDef(
+        identifier: "isLegato",
+        name: "Legato",
+        address: akGetParameterAddress("OscSynthParameterIsLegato"),
+        defaultValue: 0,
+        range: 0 ... 1,
+        unit: .boolean)
+
+    /// Is Monophonic - play only one note at a time
+    @Parameter(isLegatoDef) public var isLegato: AUValue
+
     // MARK: - Initialization
 
     /// Initialize this OscSynth node

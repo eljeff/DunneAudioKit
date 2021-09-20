@@ -125,6 +125,9 @@ void OscSynthDSP::setParameter(uint64_t address, float value, bool immediate)
         case OscSynthParameterIsMonophonic:
             isMonophonic = value > 0.5;
             break;
+        case OscSynthParameterIsLegato:
+            isLegato = value > 0.5;
+            break;
     }
 }
 
@@ -168,6 +171,8 @@ float OscSynthDSP::getParameter(uint64_t address)
             return getWaveform();
         case OscSynthParameterIsMonophonic:
             return isMonophonic ? 1.0f : 0.0f;
+        case OscSynthParameterIsLegato:
+            return isLegato ? 1.0f : 0.0f;
     }
     return 0;
 }
@@ -253,4 +258,5 @@ AK_REGISTER_PARAMETER(OscSynthParameterFilterSustainLevel)
 AK_REGISTER_PARAMETER(OscSynthParameterFilterReleaseDuration)
 AK_REGISTER_PARAMETER(OscSynthParameterWaveform)
 AK_REGISTER_PARAMETER(OscSynthParameterIsMonophonic)
+AK_REGISTER_PARAMETER(OscSynthParameterIsLegato)
 AK_REGISTER_PARAMETER(OscSynthParameterRampDuration)

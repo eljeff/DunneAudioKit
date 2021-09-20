@@ -34,6 +34,7 @@ typedef NS_ENUM(AUParameterAddress, OscSynthParameter)
 
     OscSynthParameterWaveform,
     OscSynthParameterIsMonophonic,
+    OscSynthParameterIsLegato,
 
     // ensure this is always last in the list, to simplify parameter addressing
     OscSynthParameterRampDuration,
