@@ -49,6 +49,7 @@ OscSynth::OscSynth()
 , linearResonance(1.0f)
 , isMonophonic(false)
 , isLegato(false)
+, stoppingAllVoices(false)
 , data(new InternalData)
 {
     for (int i=0; i < MAX_VOICE_COUNT; i++)
@@ -179,6 +180,7 @@ void OscSynth::sustainPedal(bool down)
 
 void OscSynth::play(unsigned noteNumber, unsigned velocity, float noteFrequency, bool anotherKeyWasDown)
 {
+    if (stoppingAllVoices) return;
 
     if (isMonophonic)
     {
@@ -301,12 +303,35 @@ void OscSynth::stop(unsigned noteNumber, bool immediate)
     }
 }
 
+void OscSynth::stopAllVoices()
+{
+    // Lock out starting any new notes, and tell Render() to stop all active notes
+    stoppingAllVoices = true;
+
+    // Wait until Render() has killed all active notes
+    bool noteStillSounding = true;
+    while (noteStillSounding)
+    {
+        noteStillSounding = false;
+        for (int i=0; i < MAX_VOICE_COUNT; i++)
+            if (data->voice[i].get()->noteNumber >= 0) noteStillSounding = true;
+    }
+}
+void OscSynth::restartVoices()
+{
+    // Allow starting new notes again
+    stoppingAllVoices = false;
+}
+
+
 void OscSynth::render(unsigned channelCount, unsigned sampleCount, float *outBuffers[])
 {
     float *pOutLeft = outBuffers[0];
     float *pOutRight = outBuffers[1];
     data->vibratoLFO.setFrequency(vibratoFreq);
     data->vibratoLFO.advanceLFO();
+
+    bool allowSampleRunout = !(isMonophonic && isLegato);
 
     for (int i=0; i < MAX_VOICE_COUNT; i++)
     {
@@ -316,10 +341,10 @@ void OscSynth::render(unsigned channelCount, unsigned sampleCount, float *outBuf
         float phaseDeltaMultiplier = pow(2.0f, pitchDev / 12.0);
 
         int nn = pVoice->noteNumber;
-        if (nn >= 0)
-        {
-            if (pVoice->prepToGetSamples(masterVolume, phaseDeltaMultiplier, cutoffMultiple, cutoffEnvelopeStrength, linearResonance) ||
-                pVoice->getSamples(sampleCount, pOutLeft, pOutRight))
+        if (nn >= 0) {
+            if (stoppingAllVoices ||
+                pVoice->prepToGetSamples(masterVolume, phaseDeltaMultiplier, cutoffMultiple, cutoffEnvelopeStrength, linearResonance) ||
+                (pVoice->getSamples(sampleCount, pOutLeft, pOutRight) && allowSampleRunout))
             {
                 stopNote(nn, true);
             }

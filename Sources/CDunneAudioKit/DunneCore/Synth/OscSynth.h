@@ -29,6 +29,8 @@ public:
 
     void playNote(unsigned noteNumber, unsigned velocity, float noteFrequency);
     void stopNote(unsigned noteNumber, bool immediate);
+    void stopAllVoices();
+    void restartVoices();
     void sustainPedal(bool down);
 
     void  setAmpAttackDurationSeconds(float value);
@@ -84,6 +86,9 @@ protected:
 
     /// resonance [-20 dB, +20 dB] becomes linear [10.0, 0.1]
     float linearResonance;
+
+    // temporary state
+    bool stoppingAllVoices;
 
     void play(unsigned noteNumber, unsigned velocity, float noteFrequency, bool anotherKeyWasDown);
     void stop(unsigned noteNumber, bool immediate);
