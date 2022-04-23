@@ -426,11 +426,12 @@ public class Sampler: Node {
         update(data: SamplerData(sfzURL: url))
     }
     
-    public func load(avAudioFile: AVAudioFile) {
-        let descriptor = SampleDescriptor(noteNumber: 64, noteFrequency: 440,
+    public func load(avAudioFile: AVAudioFile, noteFrequency: Float = 440, loopEnabled: Bool = false) {
+        let loopPoint = loopEnabled ? Float(avAudioFile.length) : 0.0
+        let descriptor = SampleDescriptor(noteNumber: 64, noteFrequency: noteFrequency,
                                   minimumNoteNumber: 0, maximumNoteNumber: 127,
                                   minimumVelocity: 0, maximumVelocity: 127,
-                                  isLooping: false, loopStartPoint: 0, loopEndPoint: 0.0,
+                                  isLooping: loopEnabled, loopStartPoint: 0, loopEndPoint: loopPoint,
                                   startPoint: 0.0,
                                   endPoint: Float(avAudioFile.length))
         let data = SamplerData(sampleDescriptor: descriptor, file: avAudioFile)
