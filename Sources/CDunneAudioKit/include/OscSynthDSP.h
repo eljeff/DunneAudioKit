@@ -40,4 +40,6 @@ typedef NS_ENUM(AUParameterAddress, OscSynthParameter)
     OscSynthParameterRampDuration,
 };
 
-AK_API DSPRef akOscSynthCreateDSP(void);
+CF_EXTERN_C_BEGIN
+DSPRef akOscSynthCreateDSP(void);
+CF_EXTERN_C_END
